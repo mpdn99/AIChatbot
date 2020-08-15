@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "761628735057",
+    "firebase_url": "https://aichatbot-justgo.firebaseio.com",
+    "project_id": "aichatbot-justgo",
+    "storage_bucket": "aichatbot-justgo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761628735057:android:29ff67740f06b41b27ea70",
+        "android_client_info": {
+          "package_name": "com.aichatbot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761628735057-ndclo79f0nb2mftelbio2391qjs233o5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aichatbot",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "761628735057-fi0l15mc9ko2387qdmdpk37u02s0938h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSgzaYTXABSvg7SLJ6YQBvdW75cjuvd2k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761628735057-fi0l15mc9ko2387qdmdpk37u02s0938h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
