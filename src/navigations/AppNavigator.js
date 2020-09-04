@@ -11,10 +11,16 @@ import {
 import 'react-native-gesture-handler';
 import SplashScreen from '../screens/SplashScreen';
 import LoginScreen from '../screens/LoginScreen';
+import AuthScreen from '../screens/AuthScreen';
+import TeacherChatScreen from '../screens/TeacherChatScreen';
 import AppDrawerNavigation from './AppDrawerNavigator';
+import {useSelector} from 'react-redux';
 const Stack = createStackNavigator();
 
+
 export default function AppNavigator() {
+  const role = useSelector(state => state.roleReducer.state);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -31,7 +37,9 @@ export default function AppNavigator() {
         style={{backgroundColor: 'transparent'}}>
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Auth" component={AuthScreen} />
         <Stack.Screen name="Main" component={AppDrawerNavigation} />
+        <Stack.Screen name="TeacherChat" component={TeacherChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

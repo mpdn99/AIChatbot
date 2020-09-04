@@ -9,12 +9,24 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import auth from '@react-native-firebase/auth';
+import {useSelector, useDispatch} from 'react-redux';
+import allActions from '../actions/';
 
 export default function SideBar(props) {
+
+  const phoneNumber = useSelector(state => state.phoneNumberReducer.state);
+
+  const dispatch = useDispatch();
+
   const signOut = () => {
     auth()
     .signOut()
-    .then(() => props.navigation.replace('Login'));
+    .then(destroySession);
+  }
+
+  const destroySession = () => {
+    dispatch(allActions.destroySession());
+    props.navigation.replace('Login');
   }
 
   const logoutNoti = () => {
@@ -28,7 +40,7 @@ export default function SideBar(props) {
     <DrawerContentScrollView style={{flex: 1}} {...props}>
       <View style={styles.userInfo}>
         <Image style={styles.img} source={require('../images/guest.png')} />
-        <Text style={styles.text}>Guest</Text>
+        <Text style={styles.text}>{phoneNumber}</Text>
       </View>
       <DrawerItemList {...props} />
       <DrawerItem label="Đăng xuất" onPress={logoutNoti} />

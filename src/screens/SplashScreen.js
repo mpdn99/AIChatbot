@@ -11,7 +11,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import styles from '../styles/styles';
+import styles from '../styles';
 
 export default function SplashScreen({navigation}) {
   const animIcon = useRef(new Animated.Value(0)).current;

@@ -13,36 +13,31 @@ import {
     TouchableOpacity,
     Animated,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
 import styles from '../styles';
-import {useSelector, useDispatch} from 'react-redux';
-import allActions from '../actions/';
-import checkUser from '../services/checkUser';
+import {useSelector} from 'react-redux';
 
-export default function LoginScreen({ navigation }) {
-    const [msg, setMsg] = useState('');
+export default function AuthScreen({ navigation }) {
+    const [code, setCode] = useState('');
+    const [Msg, setMsg] = useState('');
 
-    const phoneNumber = useSelector(state => state.phoneNumberReducer.state);
-    
-    const dispatch = useDispatch();
+    const confirm = useSelector(state => state.confirmReducer.state);
+    const role = useSelector(state => state.roleReducer.state);
 
-    const phoneNumberHandler = (number) => {
-        dispatch(allActions.setPhoneNumber(number));
+    async function confirmCode() {
+        try {
+            if (code.length > 0){
+                await confirm.confirm(code);
+                navigation.replace('Main');
+            }
+        } catch (error) {
+            setMsg('Mã xác nhận sai. Mời bạn nhập lại!');
+        }
+    }
+
+    const backToSignIn = () => {
+        navigation.replace('Login');
+
     };
-
-    const signInWithPhoneNumber = () => {
-        checkUser(phoneNumber, dispatch, setMsg, navigation);
-    }
-
-    async function signInWithAnonymous() {
-        auth()
-            .signInAnonymously()
-            .then(() => {
-                dispatch(allActions.setPhoneNumber('anonymous'));
-                dispatch(allActions.setRole('anonymous'));
-                navigation.navigate('Main');
-            });
-    }
 
     useEffect(() => {
         LoginAnimation();
@@ -69,15 +64,18 @@ export default function LoginScreen({ navigation }) {
                         style={{ height: 250, width: 250, alignSelf: 'center' }}
                     />
                 </View>
-                <Text style={{alignSelf:'center', marginHorizontal: 5, color: 'red' }}>{msg}</Text>
-                <Animated.View style={{ marginTop: AnimLogin }}>
+                <View>
                     <View style={{ marginHorizontal: 32 }}>
+                        <Text>
+                            Bạn sẽ nhận được một tin nhắn văn bản chứa mã xác nhận của bạn.
+                Hãy nhập nó vào bên dưới.{' '}
+                        </Text>
+                        <Text style={{ marginHorizontal: 5, color: 'red' }}>{Msg}</Text>
                         <TextInput
-                            placeholder="Nhập số điện thoại của bạn"
+                            placeholder="Nhập mã xác nhận"
                             style={styles.input}
-                            onChangeText={phoneNumberHandler}
-                            keyboardType="phone-pad"
-                            autoCompleteType="tel"
+                            onChangeText={setCode}
+                            keyboardType="number-pad"
                         />
                     </View>
                     <View
@@ -87,14 +85,18 @@ export default function LoginScreen({ navigation }) {
                             marginHorizontal: 20,
                             marginVertical: 32,
                         }}>
-                        <TouchableOpacity style={styles.button} onPress={signInWithPhoneNumber}>
-                            <Text style={styles.buttonText}>Tiếp tục</Text>
+                        <TouchableOpacity style={styles.button} onPress={confirmCode}>
+                            <Text style={styles.buttonText}>Đăng nhập</Text>
                         </TouchableOpacity>
                     </View>
                     <Text style={{ marginHorizontal: 32 }}>
-                        Bạn chưa có tài khoản? <Text style={{ color: 'blue' }} onPress={signInWithAnonymous}> Đăng nhập bằng tài khoản khách</Text>
+                        Sau một phút chưa nhận được tin nhắn văn bản?
+              <Text style={{ color: 'blue' }} onPress={backToSignIn}>
+                            {' '}
+                Nhập lại số điện thoại của bạn{' '}
+                        </Text>
                     </Text>
-                </Animated.View>
+                </View>
             </View>
         </KeyboardAvoidingView>
     );
