@@ -3,7 +3,8 @@ import database from '@react-native-firebase/database';
 const onDbChat = (USER, callback) => {
   const parse = (snapshot) => {
     var {createdAt, text, user, quickReplies} = snapshot.val();
-    text = text.replaceAll('\\n', '\n');
+    // text = text.replaceAll('\\n', '\n');
+    text = text.split('\\n').join('\n');
     const {key: _id} = snapshot;
     let message = {_id, createdAt, text, user};
     if (quickReplies != null) {
