@@ -6,8 +6,9 @@ import {GiftedChat} from 'react-native-gifted-chat';
 import {useSelector, useDispatch} from 'react-redux';
 import botAPI from '../services/botAPI';
 import chat from '../services/chat';
-import onDbChat from '../services/onDbChat';
+// import onDbChat from '../services/onDbChat';
 import offDbChat from '../services/offDbChat';
+import database from '@react-native-firebase/database';
 
 // import testApi from '../services/testApi';
 
@@ -23,15 +24,32 @@ export default function ChatScreen({navigation}) {
   const [messages, setMessages] = useState([]);
   const phoneNumber = useSelector(state => state.phoneNumberReducer.state);
   useEffect(() => {
-    onDbChat(USER, message => {
-      setMessages(previousMessages => GiftedChat.append(previousMessages, message))
-    }
-    );
+    // onDbChat(USER, message => {
+    //   setMessages(previousMessages => GiftedChat.append(previousMessages, message))
+    // }
+    // );
+      const parse = (snapshot) => {
+        var {createdAt, text, user, quickReplies} = snapshot.val();
+        text = text.split('\\n').join('\n');
+        const {key: _id} = snapshot;
+        let message = {_id, createdAt, text, user};
+        if (quickReplies != null) {
+          message = {_id, createdAt, text, user, quickReplies};
+        }
+        return message;
+      };
+
+      const onChildAdd = database()
+        .ref(`/users/${USER._id}`)
+        .limitToLast(10)
+        .on('child_added', (snapshot) =>
+        setMessages(previousMessages => GiftedChat.append(previousMessages, parse(snapshot))));
     botAPI(USER._id, 'hello',botSend);
     return () => {
       // offDbChat();
+      database().ref(`/users/${USER._id}`).off('child_added', onChildAdd);
     };
-  }, [USER]);
+  }, []);
 
   const USER =  {
       name: phoneNumber,
