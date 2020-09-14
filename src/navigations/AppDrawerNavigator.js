@@ -4,14 +4,14 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import SideBar from '../components/SideBar';
 import MainScreen from '../screens/MainScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import ListScreen from '../screens/AuthScreen';
+import ListScreen from '../screens/ListScreen';
 import {useSelector} from 'react-redux';
 const Drawer = createDrawerNavigator();
 const AppDrawerNavigation = () => {
   const role = useSelector(state => state.roleReducer.state);
   return (
     <Drawer.Navigator
-      // initialRouteName="Main"
+    initialRouteName='List'
       drawerContent={(props) => <SideBar {...props} />}>
       {
         role === 'teacher' ? (
@@ -28,12 +28,11 @@ const AppDrawerNavigation = () => {
           />
         )
       }
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Settings"
         component={SettingsScreen}
         options={{title: 'Cài đặt'}}
-      />
-
+      /> */}
     </Drawer.Navigator>
   );
 };

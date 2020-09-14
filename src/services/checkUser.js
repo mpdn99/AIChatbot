@@ -1,6 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import allActions from '../actions/';
-import login from './login';
+import signInWithPhoneNumber from './signInWithPhoneNumber';
 
 const checkUser = (phoneNumber, dispatch, setMsg, navigation) => {
   firestore()
@@ -9,7 +9,7 @@ const checkUser = (phoneNumber, dispatch, setMsg, navigation) => {
     .get()
     .then((documentSnapshot) => {
       if (documentSnapshot.exists) {
-        login(phoneNumber, dispatch, navigation);
+        signInWithPhoneNumber(phoneNumber, dispatch, navigation);
         dispatch(allActions.setRole(documentSnapshot.data().role));
       } else {
         setMsg('Số điên thoại sai!');

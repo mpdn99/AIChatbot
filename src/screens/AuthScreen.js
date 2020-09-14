@@ -21,16 +21,27 @@ export default function AuthScreen({ navigation }) {
     const [Msg, setMsg] = useState('');
 
     const confirm = useSelector(state => state.confirmReducer.state);
-    const role = useSelector(state => state.roleReducer.state);
 
     async function confirmCode() {
         try {
-            if (code.length > 0){
+            if (code.length === 6){
                 await confirm.confirm(code);
                 navigation.replace('Main');
             }
         } catch (error) {
-            setMsg('Mã xác nhận sai. Mời bạn nhập lại!');
+            let userErrorMessage;
+            if (error.code === 'auth/invalid-verification-code') {
+              userErrorMessage = 'Xin lỗi, mã xác nhận không chính xác.'
+            } else if (error.code === 'auth/user-disabled') {
+              userErrorMessage = 'Xin lỗi, số điện thoại này đã bị chặn.';
+            } else {
+              // other internal error
+              // see https://firebase.google.com/docs/reference/js/firebase.auth.Auth.html#sign-inwith-credential
+              userErrorMessage = 'Xin lỗi, chúng tôi không thể xác minh số điện thoại đó vào lúc này. '
+                + 'Vui lòng thử lại sau. '
+                + '\n\nNếu sự cố vẫn tiếp diễn, vui lòng liên hệ với bộ phận hỗ trợ.'
+            }
+            setMsg(userErrorMessage);
         }
     }
 

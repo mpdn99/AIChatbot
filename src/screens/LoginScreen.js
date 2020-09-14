@@ -15,33 +15,45 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import styles from '../styles';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import allActions from '../actions/';
 import checkUser from '../services/checkUser';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 export default function LoginScreen({ navigation }) {
     const [msg, setMsg] = useState('');
 
     const phoneNumber = useSelector(state => state.phoneNumberReducer.state);
-    
+
     const dispatch = useDispatch();
 
     const phoneNumberHandler = (number) => {
         dispatch(allActions.setPhoneNumber(number));
+        dispatch(allActions.setUser_id(number));
     };
 
     const signInWithPhoneNumber = () => {
         checkUser(phoneNumber, dispatch, setMsg, navigation);
-    }
+    };
 
     async function signInWithAnonymous() {
-        auth()
-            .signInAnonymously()
-            .then(() => {
-                dispatch(allActions.setPhoneNumber('anonymous'));
-                dispatch(allActions.setRole('anonymous'));
-                navigation.navigate('Main');
-            });
+        LoginManager.logInWithPermissions(['public_profile', 'email']).then(
+            function (result) {
+                if (result.isCancelled) {
+                } else {
+                    return AccessToken.getCurrentAccessToken().then((data) => {
+                        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+                        return auth().signInWithCredential(facebookCredential);
+                    }).then((user) => {
+                        console.log(user.additionalUserInfo.profile.id);
+                        dispatch(allActions.setPhoneNumber(user.additionalUserInfo.profile.email));
+                        dispatch(allActions.setUser_id(user.additionalUserInfo.profile.id));
+                        dispatch(allActions.setRole('anonymous'));
+                        navigation.replace('Main');
+                    });
+                }
+            },
+        );
     }
 
     useEffect(() => {
@@ -69,7 +81,7 @@ export default function LoginScreen({ navigation }) {
                         style={{ height: 250, width: 250, alignSelf: 'center' }}
                     />
                 </View>
-                <Text style={{alignSelf:'center', marginHorizontal: 5, color: 'red' }}>{msg}</Text>
+                <Text style={{ alignSelf: 'center', marginHorizontal: 5, color: 'red' }}>{msg}</Text>
                 <Animated.View style={{ marginTop: AnimLogin }}>
                     <View style={{ marginHorizontal: 32 }}>
                         <TextInput

@@ -2,10 +2,10 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
-const Header = ({navigation}) => {
+const Header = ({navigation, title}) => {
   const MenuBtn = () => {
     navigation.openDrawer();
   };
@@ -22,6 +22,10 @@ const Header = ({navigation}) => {
           />
         </TouchableOpacity>
       </View>
+      <View style={{flex: 2, justifyContent: 'center'}}>
+        <Text style={{color: 'white', fontSize: 20}}>{title}</Text>
+      </View>
+      <View style={{flex: 1, justifyContent: 'center'}}/>
     </View>
   );
 };

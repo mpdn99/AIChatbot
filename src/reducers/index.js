@@ -3,11 +3,13 @@ import phoneNumberReducer from './phoneNumberReducer';
 import confirmReducer from './confirmReducer';
 import roleReducer from './roleReducer';
 import {DESTROY_SESSION} from '../actions/types';
+import idReducer from './idReducer';
 
 const appReducer = combineReducers({
   phoneNumberReducer,
   confirmReducer,
   roleReducer,
+  idReducer,
 });
 
 const rootReducer = (state, action) => {
